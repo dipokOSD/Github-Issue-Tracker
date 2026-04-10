@@ -31,16 +31,23 @@
 </head>
 
 <body>
-    <div class="min-h-screen flex justify-center items-center">
-        <div class="bg-white shadow-2xl rounded-2xl w-[500px] ">
-            <div class="logo pt-8 flex justify-center ">
-                <img src="./assets/github-logo.png" alt="">
+    <header>
+        <div class="navbar bg-base-100 shadow-sm">
+            <div class="w-11/12 mx-auto flex justify-between items-center">
+                <div class="flex gap-3 items-center">
+                    <img src="./assets/github-logo.png" alt="">
+                    <h2 class="text-2xl font-bold">GitHub Issues Tracker</h2>
+                </div>
+                <div class="flex gap-3">
+                    <label class="input input-bordered flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="grow" placeholder="Search" />
+                    </label>
+                    <button class="btn btn-primary">+ New Issue</button>
+                </div>
             </div>
-            <div class="pt-4 text-center">
-                <h2 class="text-2xl font-bold">GitHub Issues Tracker</h2>
-                <p class="text-[#64748B]">Sign in to manage your issues</p>
-            </div>
-
+        </div>
+    </header>
 </body>
 
 </html>
