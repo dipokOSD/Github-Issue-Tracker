@@ -1,3 +1,5 @@
+// login page logic
+
 const loginBtn=document.getElementById("login-btn")
 loginBtn.addEventListener("click",()=>{
     const username=document.getElementById("username").value;
@@ -11,3 +13,4 @@ loginBtn.addEventListener("click",()=>{
         alert("Wrong Requared");
     }
 })
+// -----------------------------------------------
