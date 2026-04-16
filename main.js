@@ -1,24 +1,30 @@
-const lodeAllIssue=async()=>{
-    const res=await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
-    const data=await res.json()
-    displayAllIssue(data.data);
-}
-lodeAllIssue()
-const displayAllIssue=(issues)=>{
-    const allIssuesContainar=document.getElementById("all-issues-containar")
-    // allIssuesContainar.innerHTML=""
+let allIssues = [];
+const lodeAllIssue = async () => {
+  const res = await fetch(
+    "https://phi-lab-server.vercel.app/api/v1/lab/issues",
+  );
+  const data = await res.json();
+   allIssues = data.data;
+  displayAllIssue(allIssues);
+};
+lodeAllIssue();
+const displayAllIssue = (issues) => {
+  const allIssuesContainar = document.getElementById("all-issues-containar");
+  allIssuesContainar.innerHTML = "";
 
-    issues.forEach(issue => {
-        const card=document.createElement("div")
-        card.innerHTML=`
-        <div class="bg-white shadow-2xl rounded-2xl ">
+  issues.forEach((issue) => {
+    const card = document.createElement("div");
+    card.innerHTML = `
+        <div onclick="load class="bg-white shadow-2xl rounded-2xl overflow-hidden h-full flex flex-col ">
+
+                <div class="${issue.status === "open" ? "bg-green-500" : "bg-purple-500"} h-2 w-full"></div>
                     <div class="flex justify-between px-4 pt-4">
                         <img src="./assets/Open-Status.png" alt="">
                         <p class="bg-amber-200 px-4 rounded-2xl">${issue.priority}</p>
                     </div>
                     <div class="space-y-3 p-4">
                         <h2 class="text-2xl font-bold text-justify">${issue.title}</h2>
-                        <p class="text-[#64748B]">${issue.description}</p>
+                        <p class="text-[#64748B] line-clamp-2">${issue.description}</p>
                     </div>
                     <div class="flex gap-3 p-4">
                         <button class="bg-[#faeded] px-3 py-1 text-[#EF4444] rounded-2xl"><i class="fa-solid fa-bug"></i> BUG</button>
@@ -30,8 +36,19 @@ const displayAllIssue=(issues)=>{
                         <p>${issue.createdAt}</p>
                     </div>
                 </div>
-        `
-        allIssuesContainar.appendChild(card)
-        
-    });
+                
+                </div>
+        `;
+    
+    allIssuesContainar.appendChild(card);
+  });
+};
+
+const filterIssues = (type) => {
+    if (type === "all") {
+        displayAllIssue(allIssues);
+    } else {
+        const filtered = allIssues.filter(i => i.status === type);
+        displayAllIssue(filtered);
+    }
 }

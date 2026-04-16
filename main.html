@@ -52,9 +52,9 @@
     <main class="w-[80%] mx-auto">
         <section>
             <div class="bg-white p-6 shadow-2xl mt-10 flex gap-4 rounded-2xl ">
-                <button class="btn btn-neutral btn-outline">All</button>
-                <button class="btn btn-neutral btn-outline">Open</button>
-                <button class="btn btn-neutral btn-outline">Closed</button>
+                <button onclick="filterIssues('all')" class="btn btn-neutral btn-outline">All</button>
+                <button onclick="filterIssues('open')" class="btn btn-neutral btn-outline">Open</button>
+                <button onclick="filterIssues('closed')" class="btn btn-neutral btn-outline">Closed</button>
 
             </div>
         </section>
@@ -71,16 +71,32 @@
                 </div>
                 <!-- right -->
                 <div class="flex gap-4">
-                    <p><i class="fa-solid fa-circle"></i> <span>Open</span></p>
-                    <p><i class="fa-solid fa-circle"></i> <span>Closed</span></p>
+                    <p><i class="fa-solid text-green-500 fa-circle"></i> <span>Open</span></p>
+                    <p><i class="fa-solid text-purple-500 fa-circle"></i> <span>Closed</span></p>
                 </div>
             </div>
             <hr class="text-gray-200 shadow-2xl">
             <!-- all issue containar -->
-            <div id="all-issues-containar" class="bg-white  shadow-2xl grid grid-cols-4 gap-4 p-6">
-                
+            <div id="all-issues-containar" class="bg-white  shadow-2xl grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
+
             </div>
         </section>
+
+        <!-- Open the modal using ID.showModal() method -->
+    <!-- <button class="btn" onclick="my_modal_5.showModal()">open modal</button> -->
+    <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click the button below to close</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+     
 
     </main>
 
