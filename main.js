@@ -35,6 +35,13 @@ const updateTotalIssues=(count)=>{
 }
 
 let allIssues = [];
+const removeActive=()=>{
+  const labelBnt=document.querySelectorAll(".label-btn")
+  console.log(labelBnt);
+  labelBnt.forEach((btn)=>btn.classList.remove("active"))
+}
+removeActive()
+
 const lodeAllIssue = async () => {
   showLoading();
   const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
@@ -43,6 +50,14 @@ const lodeAllIssue = async () => {
   hideLoading();
   updateTotalIssues(allIssues.length);
   displayAllIssue(allIssues);
+  removeActive()
+
+  const buttons = document.querySelectorAll(".label-btn");
+  buttons.forEach(btn => {
+    if (btn.innerText.toLowerCase() === "all") {
+      btn.classList.add("active");
+    }
+  });
 };
 lodeAllIssue();
 
@@ -132,8 +147,18 @@ const displayDetails = (modal) => {
 
 const filterIssues = (type) => {
   showLoading();
+  removeActive()
+
+  const buttons = document.querySelectorAll(".label-btn");
+  buttons.forEach(btn => {
+    if (btn.innerText.toLowerCase() === type) {
+      btn.classList.add("active");
+    }
+  });
+
   if (type === "all") {
     displayAllIssue(allIssues);
+
   } else {
     const filtered = allIssues.filter((i) => i.status === type);
     displayAllIssue(filtered);
@@ -160,4 +185,10 @@ document.getElementById("btn-search").addEventListener("click",()=>{
    displayAllIssue(filterdata)
   })
 })
+
+
+
+
+
+
 
