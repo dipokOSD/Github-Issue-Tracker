@@ -170,13 +170,8 @@ document.getElementById("btn-search").addEventListener("click",()=>{
   const input=document.getElementById("input-search")
   const searchValu=input.value.trim().toLowerCase() ;
   console.log(searchValu);
-  
-  fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues/")
-  .then(res=>res.json())
-  .then(data=>{
-   const allData=data.data;
-   console.log(allData);
-   const filterdata=allData.filter(issue=>
+
+   const filterdata=allIssues.filter(issue=>
     issue.title.toLowerCase().includes(searchValu)||
     issue.description.toLowerCase().includes(searchValu)||
     issue.author.toLowerCase().includes(searchValu)
@@ -184,7 +179,7 @@ document.getElementById("btn-search").addEventListener("click",()=>{
   )
    displayAllIssue(filterdata)
   })
-})
+
 
 
 
