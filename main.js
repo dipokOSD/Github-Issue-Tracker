@@ -1,32 +1,43 @@
-const createElement=(labels)=>{
-    return labels
-      .map((label)=>{
-        if (label.toLowerCase() === "bug") {
+const createElement = (labels) => {
+  return labels
+    .map((label) => {
+      if (label.toLowerCase() === "bug") {
         return `<button class="bg-[#FECACA] text-[#EF4444] px-4 py-1 rounded-2xl">${label}</button>`;
       } else {
         return `<button class="bg-[#FFF8DB] text-[#D97706] px-4 py-1 rounded-2xl">${label}</button>`;
       }
-    }).join(" ");
-}
+    })
+    .join(" ");
+};
 
-const showLoading=()=>{
-    const loading=document.getElementById("loading-spinner")
-    loading.classList.remove("hidden")
-}
-const hideLoading=()=>{
-    const loading=document.getElementById("loading-spinner")
-    loading.classList.add("hidden")
-}
+const showLoading = () => {
+  const loading = document.getElementById("loading-spinner");
+  loading.classList.remove("hidden");
+};
+const hideLoading = () => {
+  const loading = document.getElementById("loading-spinner");
+  loading.classList.add("hidden");
+};
+
+const getPriorityClass = (priority) => {
+  if (priority.toUpperCase() === "high".toUpperCase()) {
+    return "bg-red-100 text-red-500";
+  } else if (priority.toUpperCase() === "medium".toUpperCase()) {
+    return "bg-yellow-100 text-yellow-500";
+  } else {
+    return "bg-gray-100 text-gray-500";
+  }
+};
 
 let allIssues = [];
 const lodeAllIssue = async () => {
-    showLoading()
+  showLoading();
   const res = await fetch(
     "https://phi-lab-server.vercel.app/api/v1/lab/issues",
   );
   const data = await res.json();
   allIssues = data.data;
-  hideLoading()
+  hideLoading();
   displayAllIssue(allIssues);
 };
 lodeAllIssue();
@@ -43,7 +54,11 @@ const displayAllIssue = (issues) => {
                 <div class="${issue.status === "open" ? "bg-green-500" : "bg-purple-500"} h-2 w-full"></div>
                     <div class="flex justify-between px-4 pt-4">
                         <img src="./assets/Open-Status.png" alt="">
-                        <p class="bg-amber-200 px-4 rounded-2xl">${issue.priority}</p>
+                       
+                        <p class="${getPriorityClass(issue.priority)} px-4 rounded-2xl">
+                            ${issue.priority.toUpperCase()}
+                        </p>
+
                     </div>
                     <div class="space-y-3 p-4">
                         <h2 class="text-2xl font-bold text-justify">${issue.title}</h2>
@@ -74,8 +89,7 @@ const loadModal = async (id) => {
   displayDetails(data.data);
 };
 
- const displayDetails = (modal) => {
-
+const displayDetails = (modal) => {
   const modalContainar = document.getElementById("issue-containar");
   modalContainar.innerHTML = `
     <div class="space-y-4">
@@ -111,10 +125,9 @@ const loadModal = async (id) => {
 };
 
 const filterIssues = (type) => {
-    showLoading();
+  showLoading();
   if (type === "all") {
     displayAllIssue(allIssues);
-    
   } else {
     const filtered = allIssues.filter((i) => i.status === type);
     displayAllIssue(filtered);
