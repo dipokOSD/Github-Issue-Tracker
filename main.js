@@ -1,10 +1,32 @@
+const createElement=(labels)=>{
+    return labels
+      .map((label)=>{
+        if (label.toLowerCase() === "bug") {
+        return `<button class="bg-[#FECACA] text-[#EF4444] px-4 py-1 rounded-2xl">${label}</button>`;
+      } else {
+        return `<button class="bg-[#FFF8DB] text-[#D97706] px-4 py-1 rounded-2xl">${label}</button>`;
+      }
+    }).join(" ");
+}
+
+const showLoading=()=>{
+    const loading=document.getElementById("loading-spinner")
+    loading.classList.remove("hidden")
+}
+const hideLoading=()=>{
+    const loading=document.getElementById("loading-spinner")
+    loading.classList.add("hidden")
+}
+
 let allIssues = [];
 const lodeAllIssue = async () => {
+    showLoading()
   const res = await fetch(
     "https://phi-lab-server.vercel.app/api/v1/lab/issues",
   );
   const data = await res.json();
   allIssues = data.data;
+  hideLoading()
   displayAllIssue(allIssues);
 };
 lodeAllIssue();
@@ -14,16 +36,6 @@ const displayAllIssue = (issues) => {
   allIssuesContainar.innerHTML = "";
 
   issues.forEach((issue) => {
-    // show level
-    const labels = issue.labels
-      .map((label) => {
-        if (label.toLowerCase() === "bug") {
-          return `<button class="bg-[#FECACA] text-[#EF4444] px-4 py-1 rounded-2xl">${label}</button>`;
-        } else {
-          return `<button class="bg-[#FFF8DB] text-[#D97706] px-4 py-1 rounded-2xl">${label}</button>`;
-        }
-      })
-      .join(" ");
     const card = document.createElement("div");
     card.innerHTML = `
         <div onclick="loadModal(${issue.id})" class="bg-white shadow-2xl rounded-2xl overflow-hidden h-full flex flex-col ">
@@ -38,7 +50,7 @@ const displayAllIssue = (issues) => {
                         <p class="text-[#64748B] line-clamp-2">${issue.description}</p>
                     </div>
                     <div class="flex gap-3 p-4">
-                        ${labels}
+                        ${createElement(issue.labels)}
                     </div>
                     <hr class="text-gray-200 ">
                     <div class="text-[#64748B] p-4">
@@ -62,16 +74,8 @@ const loadModal = async (id) => {
   displayDetails(data.data);
 };
 
-const displayDetails = (modal) => {
-  const labels = modal.labels
-    .map((label) => {
-      if (label.toLowerCase() === "bug") {
-        return `<button class="bg-[#FECACA] text-[#EF4444] px-4 py-1 rounded-2xl">${label}</button>`;
-      } else {
-        return `<button class="bg-[#FFF8DB] text-[#D97706] px-4 py-1 rounded-2xl">${label}</button>`;
-      }
-    })
-    .join(" ");
+ const displayDetails = (modal) => {
+
   const modalContainar = document.getElementById("issue-containar");
   modalContainar.innerHTML = `
     <div class="space-y-4">
@@ -85,7 +89,7 @@ const displayDetails = (modal) => {
                                
 
                         <div class="flex gap-3 p-4">
-                                            ${labels}
+                                            ${createElement(modal.labels)}
                         </div>
 
                         </div>
@@ -107,10 +111,13 @@ const displayDetails = (modal) => {
 };
 
 const filterIssues = (type) => {
+    showLoading();
   if (type === "all") {
     displayAllIssue(allIssues);
+    
   } else {
     const filtered = allIssues.filter((i) => i.status === type);
     displayAllIssue(filtered);
   }
+  hideLoading();
 };
