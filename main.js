@@ -29,15 +29,19 @@ const getPriorityClass = (priority) => {
   }
 };
 
+const updateTotalIssues=(count)=>{
+    const total=document.getElementById("total-issues")
+    total.innerText=`${count} Issues`
+}
+
 let allIssues = [];
 const lodeAllIssue = async () => {
   showLoading();
-  const res = await fetch(
-    "https://phi-lab-server.vercel.app/api/v1/lab/issues",
-  );
+  const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
   const data = await res.json();
   allIssues = data.data;
   hideLoading();
+  updateTotalIssues(allIssues.length);
   displayAllIssue(allIssues);
 };
 lodeAllIssue();
@@ -116,7 +120,9 @@ const displayDetails = (modal) => {
 
                             <div class="space-y-2">
                                 <p class="text-gray-400">Priority:</p>
-                                <button class="bg-[#EF4444] px-4 py-1 text-white outline-none  rounded-2xl">${modal.priority}</button>
+                                <p class="${getPriorityClass(modal.priority)} px-4 rounded-2xl">
+                                     ${modal.priority.toUpperCase()}
+                                 </p>
                             </div>
                         </div>
                     </div>
@@ -134,3 +140,24 @@ const filterIssues = (type) => {
   }
   hideLoading();
 };
+
+document.getElementById("btn-search").addEventListener("click",()=>{
+  const input=document.getElementById("input-search")
+  const searchValu=input.value.trim().toLowerCase() ;
+  console.log(searchValu);
+  
+  fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues/")
+  .then(res=>res.json())
+  .then(data=>{
+   const allData=data.data;
+   console.log(allData);
+   const filterdata=allData.filter(issue=>
+    issue.title.toLowerCase().includes(searchValu)||
+    issue.description.toLowerCase().includes(searchValu)||
+    issue.author.toLowerCase().includes(searchValu)
+   
+  )
+   displayAllIssue(filterdata)
+  })
+})
+
