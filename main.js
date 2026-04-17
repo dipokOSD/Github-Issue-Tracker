@@ -4,18 +4,29 @@ const lodeAllIssue = async () => {
     "https://phi-lab-server.vercel.app/api/v1/lab/issues",
   );
   const data = await res.json();
-   allIssues = data.data;
+  allIssues = data.data;
   displayAllIssue(allIssues);
 };
 lodeAllIssue();
+
 const displayAllIssue = (issues) => {
   const allIssuesContainar = document.getElementById("all-issues-containar");
   allIssuesContainar.innerHTML = "";
 
   issues.forEach((issue) => {
+    // show level
+    const labels = issue.labels
+      .map((label) => {
+        if (label.toLowerCase() === "bug") {
+          return `<button class="bg-[#FECACA] text-[#EF4444] px-4 py-1 rounded-2xl">${label}</button>`;
+        } else {
+          return `<button class="bg-[#FFF8DB] text-[#D97706] px-4 py-1 rounded-2xl">${label}</button>`;
+        }
+      })
+      .join(" ");
     const card = document.createElement("div");
     card.innerHTML = `
-        <div onclick="load class="bg-white shadow-2xl rounded-2xl overflow-hidden h-full flex flex-col ">
+        <div onclick="loadModal(${issue.id})" class="bg-white shadow-2xl rounded-2xl overflow-hidden h-full flex flex-col ">
 
                 <div class="${issue.status === "open" ? "bg-green-500" : "bg-purple-500"} h-2 w-full"></div>
                     <div class="flex justify-between px-4 pt-4">
@@ -27,28 +38,79 @@ const displayAllIssue = (issues) => {
                         <p class="text-[#64748B] line-clamp-2">${issue.description}</p>
                     </div>
                     <div class="flex gap-3 p-4">
-                        <button class="bg-[#faeded] px-3 py-1 text-[#EF4444] rounded-2xl"><i class="fa-solid fa-bug"></i> BUG</button>
-                        <button class="bg-[#f5ecc7] px-3 py-1 text-[#D97706] rounded-2xl"><i class="fa-regular fa-life-ring"></i> HELP WANTED</button>
+                        ${labels}
                     </div>
                     <hr class="text-gray-200 ">
                     <div class="text-[#64748B] p-4">
-                        <p>#${issue.id} by john_doe</p>
-                        <p>${issue.createdAt}</p>
+                        <p>#${issue.id} by ${issue.author}</p>
+                        ${new Date(issue.createdAt).toLocaleDateString()}
                     </div>
                 </div>
                 
                 </div>
         `;
-    
+
     allIssuesContainar.appendChild(card);
   });
 };
 
+const loadModal = async (id) => {
+  const res = await fetch(
+    `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`,
+  );
+  const data = await res.json();
+  displayDetails(data.data);
+};
+
+const displayDetails = (modal) => {
+  const labels = modal.labels
+    .map((label) => {
+      if (label.toLowerCase() === "bug") {
+        return `<button class="bg-[#FECACA] text-[#EF4444] px-4 py-1 rounded-2xl">${label}</button>`;
+      } else {
+        return `<button class="bg-[#FFF8DB] text-[#D97706] px-4 py-1 rounded-2xl">${label}</button>`;
+      }
+    })
+    .join(" ");
+  const modalContainar = document.getElementById("issue-containar");
+  modalContainar.innerHTML = `
+    <div class="space-y-4">
+                        <h3 class="text-2xl font-bold">${modal.title}</h3>
+                        <div class="flex gap-5">
+                            <button class="${modal.status === "open" ? "bg-green-500" : "bg-purple-500"} text-white outline-none px-3 rounded-2xl">${modal.status}</button>
+                            <p class="text-gray-400">${modal.author}</p>
+                             <p class="text-gray-400">${new Date(modal.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex gap-3">
+                               
+
+                        <div class="flex gap-3 p-4">
+                                            ${labels}
+                        </div>
+
+                        </div>
+                        <p class="text-gray-400">${modal.description}</p>
+                        <div class="bg-gray-100 p-5 flex gap-30 rounded-2xl ">
+                            <div class="space-y-2">
+                                <p class="text-gray-400">Assignee:</p>
+                                <h3 class="text-2xl font-bold">${modal.assignee.toUpperCase()}</h3>
+                            </div>
+
+                            <div class="space-y-2">
+                                <p class="text-gray-400">Priority:</p>
+                                <button class="bg-[#EF4444] px-4 py-1 text-white outline-none  rounded-2xl">${modal.priority}</button>
+                            </div>
+                        </div>
+                    </div>
+    `;
+  document.getElementById("issue_modal").showModal();
+};
+
 const filterIssues = (type) => {
-    if (type === "all") {
-        displayAllIssue(allIssues);
-    } else {
-        const filtered = allIssues.filter(i => i.status === type);
-        displayAllIssue(filtered);
-    }
-}
+  if (type === "all") {
+    displayAllIssue(allIssues);
+  } else {
+    const filtered = allIssues.filter((i) => i.status === type);
+    displayAllIssue(filtered);
+  }
+};
