@@ -48,7 +48,6 @@ const lodeAllIssue = async () => {
   const data = await res.json();
   allIssues = data.data;
   hideLoading();
-  updateTotalIssues(allIssues.length);
   displayAllIssue(allIssues);
   removeActive()
 
@@ -64,6 +63,8 @@ lodeAllIssue();
 const displayAllIssue = (issues) => {
   const allIssuesContainar = document.getElementById("all-issues-containar");
   allIssuesContainar.innerHTML = "";
+
+  updateTotalIssues(issues.length);
 
   issues.forEach((issue) => {
     const card = document.createElement("div");
